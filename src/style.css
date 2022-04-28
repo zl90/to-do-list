@@ -1,4 +1,11 @@
 
+:root {
+    --content-background-color: rgb(221, 221, 221);
+    --sidebar-background-color: rgb(204, 204, 204);
+    --navbar-background-color: rgb(131, 131, 131);
+    --text-color: black;
+}
+
 html {
     height: 100%;
 }
@@ -10,24 +17,23 @@ body {
 }
 
 .page-container {
-    background-color: rgb(212, 146, 146);
     flex: 1;
     display: flex;
 }
 
 .sidebar-container {
-    background-color: rgb(224, 169, 162);
+    background-color: var(--sidebar-background-color);
     width: 220px;
 }
 
 .content-container {
-    background-color: rgb(195, 248, 230);
+    background-color: var(--content-background-color);
     flex: 1;
 }
 
 .navbar-container {
     height: 64px;
-    background-color: rgb(77, 161, 133);
+    background-color: var(--navbar-background-color);
 
     display: flex;
     justify-content: space-between;
@@ -36,9 +42,6 @@ body {
 }
 
 .hamburger-menu {
-    width: 32px;
-    height: 32px;
-    background-color: rgb(129, 86, 170);
     display: none;
 }
 
