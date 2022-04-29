@@ -4,16 +4,7 @@ import endOfToday from 'date-fns/endOfToday';
 const ToDoItem = (title = 'Title...', dueDate = endOfToday(), priority = 'low') => {
     let complete = false;
 
-    const setComplete = (setting) => {complete = setting;};
-    const getComplete = () => {return complete;};
-    const getTitle = () => {return title};
-    const setTitle = (newTitle) => {title = newTitle;};
-    const getDueDate = () => {return dueDate;};
-    const setDueDate = (newDate) => {dueDate = newDate;};
-    const getPriority = () => {return priority;};
-    const setPriority = (newPriority) => {priority = newPriority;};
-
-    return {setComplete, getComplete, getTitle, setTitle, getDueDate, setDueDate, getPriority, setPriority};
+    return {title, dueDate, priority, complete};
 };
 
 const Project = (title = 'Project title...') => {
@@ -24,21 +15,50 @@ const Project = (title = 'Project title...') => {
     const removeItem = (index) => {items.splice(index, 1)};
     const getTitle = () => {return title;};
     const setTitle = (newTitle) => {title = newTitle};
+    const stringify = () => {return JSON.stringify(items);};
 
-    return {addItem, getItems, removeItem, getTitle, setTitle};
+    return {addItem, getItems, removeItem, getTitle, setTitle, stringify};
 };
-
-const todo = ToDoItem('yeet the gamers');
-console.table(todo.getTitle());
 
 const ObjectController = (function () {
 
-    const defaultProject = Project('Default');
-    const projects = [defaultProject];
-
+    const projects = [];
+    
     const getProjects = () => {return projects;};
 
-    return {getProjects};
+    const addProject = (newProject) => {projects.push(newProject);};
+
+    const saveToLocalStorage = () => {
+        for (let i = 0; i < projects.length; i++) {
+            localStorage.setItem([projects[i].getTitle()], projects[i].stringify());
+            console.log(projects[i].stringify());
+        }
+    };
+
+    const loadFromLocalStorage = () => {
+        if (localStorage.length === 0) {
+            const newProject = Project("Default");
+            addProject(newProject);
+            saveToLocalStorage();
+        } else {
+            for (let i = 0; i < localStorage.length; i++) {
+                const newProject = Project(localStorage.key(i));
+                let retrievedData = localStorage.getItem(localStorage.key(i));
+                let parsedData = JSON.parse(retrievedData);
+                // Add ToDoItems to project
+                for (let j = 0; j < parsedData.length; j++) {
+                    
+                    newProject.addItem(parsedData[j]);
+                }
+    
+                addProject(newProject);
+            }
+        }
+    };
+
+    const stringify = () => {return JSON.stringify(projects)};
+
+    return {getProjects, saveToLocalStorage, stringify, addProject, loadFromLocalStorage};
 })();
 
-export {ObjectController};
+export {ObjectController, Project, ToDoItem};
