@@ -29,6 +29,7 @@ const ObjectController = (function () {
     const addProject = (newProject) => {projects.push(newProject);};
 
     const saveToLocalStorage = () => {
+        localStorage.clear();
         for (let i = 0; i < projects.length; i++) {
             localStorage.setItem([projects[i].getTitle()], projects[i].stringify());
             console.log(projects[i].stringify());
