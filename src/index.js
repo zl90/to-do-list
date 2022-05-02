@@ -30,7 +30,7 @@ export {MainController};
 [ ] Resize the date picker (look up Materialize docs)
 [ ] Set a placeholder value for the datepicker: "Date due..."
 [X] Delete button
-[ ] Delete button functionality
+[X] Delete button functionality
 [ ] Fix Delete button styling (look up Materialize docs)
 [X] Priority Picker functionality --> ToDoItem.priority
 [X] Connect the Priority Picker to the Colour Mark

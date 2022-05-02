@@ -1,4 +1,5 @@
 import { MainController } from ".";
+import { ObjectController, Project, ToDoItem } from './ObjectController';
 
 const DisplayController = (function () {
 
@@ -7,9 +8,20 @@ const DisplayController = (function () {
     const tasklist = document.querySelector('.tasklist');
     const sidebar = document.querySelector('.sidebar-container');
     const hamburgerMenuButton = document.querySelector('.hamburger-menu');
+    let addTaskButton = document.querySelector('.addtask');
     
     // Events
     hamburgerMenuButton.addEventListener('click', toggleSidebar);
+    document.addEventListener('DOMContentLoaded', function() {
+        let elems = document.querySelectorAll('.dropdown-trigger');
+        let options = document.querySelectorAll('.dropdown-trigger');
+        let instances = M.Dropdown.init(elems, options);
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.datepicker');
+        let options = null;
+        var instances = M.Datepicker.init(elems, options);
+    });
 
     function toggleSidebar () {
         if (sidebar.style.display !== 'flex') {
@@ -18,6 +30,17 @@ const DisplayController = (function () {
             sidebar.style.display = 'none';
         }
     }
+
+    function clearEventListeners(el, withChildren) {
+        if (withChildren) {
+          el.parentNode.replaceChild(el.cloneNode(true), el);
+        }
+        else {
+          var newEl = el.cloneNode(false);
+          while (el.hasChildNodes()) newEl.appendChild(el.firstChild);
+          el.parentNode.replaceChild(newEl, el);
+        }
+      }
 
     const clearTaskList = () => {
         while (tasklist.lastChild) {
@@ -62,11 +85,27 @@ const DisplayController = (function () {
         container.parentNode.removeChild(container);
         project.removeItem(itemIndex);
         MainController.saveToLocalStorage();
+        populateProject(project);
+    };
+
+    const clickAddTask = (project) => {
+        // Temporary function to add a default object
+        const newItem = ToDoItem(`TestItem${project.getItems().length + 1}`);
+        project.addItem(newItem);
+        MainController.saveToLocalStorage();
+        
+        populateProject(project);
     };
 
     const populateProject = (project) => {
+        
         clearTaskList();
         contentHeading.textContent = project.getTitle();
+        clearEventListeners(addTaskButton, false);
+        
+        addTaskButton = document.querySelector('.addtask');
+        addTaskButton.addEventListener('click', () => {clickAddTask(project);});
+        
 
         for (let i = 0; i < project.getItems().length; i++) {
             const newContainer = document.createElement('div');
@@ -113,12 +152,7 @@ const DisplayController = (function () {
             itemDueDate.classList.add('item-duedate');
             itemDueDate.classList.add('datepicker');
             itemDueDate.type = "text";
-            document.addEventListener('DOMContentLoaded', function() {
-                var elems = document.querySelectorAll('.datepicker');
-                let options = null;
-                var instances = M.Datepicker.init(elems, options);
-            });
-
+            
 
             // Priority dropdown button
             const itemPriority = document.createElement('a');
@@ -151,11 +185,7 @@ const DisplayController = (function () {
             highLink.addEventListener('click', () => {clickPriority(project.getItems()[i], "high", colourMark, itemPriority);});
             high.appendChild(highLink);
             dropdownStructure.appendChild(high);
-            document.addEventListener('DOMContentLoaded', function() {
-                let elems = document.querySelectorAll('.dropdown-trigger');
-                let options = document.querySelector(dropdownStructure.id);
-                let instances = M.Dropdown.init(elems, options);
-            });
+            
             
             // Delete button
             const itemDelete = document.createElement('a');
@@ -182,6 +212,7 @@ const DisplayController = (function () {
             newContainer.appendChild(itemDelete);
             tasklist.appendChild(newContainer);
 
+            M.AutoInit();
         }
     };
 
