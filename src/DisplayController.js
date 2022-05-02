@@ -1,3 +1,4 @@
+import { MainController } from ".";
 
 const DisplayController = (function () {
 
@@ -24,10 +25,44 @@ const DisplayController = (function () {
         }
     };
 
-    const checkboxClicked = (item) => {
+    const clickCheckbox = (item, container) => {
         item.complete = !item.complete;
-        console.log(item.complete);
+        if (item.complete) {
+            // Use this class to style completed items with CSS
+            container.classList.add("item-complete");
+        } else {
+            container.classList.remove("item-complete");
+        }
+        MainController.saveToLocalStorage();
     }
+
+    const clickPriority = (item, newPriority, colourMark, button) => {
+        item.priority = newPriority;
+        switch (newPriority) {
+            case 'low':
+                colourMark.style.backgroundColor = 'yellow';
+                button.textContent = 'LOW';
+                break;
+            case 'medium':
+                colourMark.style.backgroundColor = 'orange';
+                button.textContent = 'MEDIUM';
+                break;
+            case 'high':
+                colourMark.style.backgroundColor = 'red';
+                button.textContent = 'HIGH';
+                break;
+            default:
+                colourMark.style.backgroundColor = 'yellow';
+                button.textContent = 'LOW';
+        }
+        MainController.saveToLocalStorage();
+    };
+
+    const clickDelete = (container, project, itemIndex) => {
+        container.parentNode.removeChild(container);
+        project.removeItem(itemIndex);
+        MainController.saveToLocalStorage();
+    };
 
     const populateProject = (project) => {
         clearTaskList();
@@ -64,8 +99,9 @@ const DisplayController = (function () {
             newLabel.classList.add('label-container');
             if (project.getItems()[i].complete) {
                 itemCheckbox.checked = "checked";
+                newContainer.classList.add("item-complete");
             }
-            itemCheckbox.addEventListener('click', () => {checkboxClicked(project.getItems()[i])} );
+            itemCheckbox.addEventListener('click', () => {clickCheckbox(project.getItems()[i], newContainer)} );
 
             // Title
             const itemTitle = document.createElement('div');
@@ -98,18 +134,21 @@ const DisplayController = (function () {
             const lowLink = document.createElement('a');
             lowLink.href = "#!";
             lowLink.textContent = "Low";
+            lowLink.addEventListener('click', () => {clickPriority(project.getItems()[i], "low", colourMark, itemPriority);});
             low.appendChild(lowLink);
             dropdownStructure.appendChild(low);
             const medium = document.createElement('li');
             const mediumLink = document.createElement('a');
             mediumLink.href = "#!";
             mediumLink.textContent = "Medium";
+            mediumLink.addEventListener('click', () => {clickPriority(project.getItems()[i], "medium", colourMark, itemPriority);});
             medium.appendChild(mediumLink);
             dropdownStructure.appendChild(medium);
             const high = document.createElement('li');
             const highLink = document.createElement('a');
             highLink.href = "#!";
             highLink.textContent = "High";
+            highLink.addEventListener('click', () => {clickPriority(project.getItems()[i], "high", colourMark, itemPriority);});
             high.appendChild(highLink);
             dropdownStructure.appendChild(high);
             document.addEventListener('DOMContentLoaded', function() {
@@ -119,8 +158,18 @@ const DisplayController = (function () {
             });
             
             // Delete button
-            const itemDelete = document.createElement('button');
+            const itemDelete = document.createElement('a');
             itemDelete.classList.add('item-delete');
+            itemDelete.classList.add('btn-raised');
+            itemDelete.classList.add('btn-small');
+            itemDelete.classList.add('waves-effect');
+            itemDelete.classList.add('waves-light');
+            itemDelete.classList.add('red');
+            itemDelete.addEventListener('click', () => {clickDelete(newContainer, project, i);})
+            const deleteIcon = document.createElement('i');
+            deleteIcon.classList.add('material-icons');
+            deleteIcon.textContent = 'close';
+            itemDelete.appendChild(deleteIcon);
 
             newContainer.appendChild(colourMark);
             newLabel.appendChild(itemCheckbox);
@@ -130,6 +179,7 @@ const DisplayController = (function () {
             newContainer.appendChild(itemDueDate);
             newContainer.appendChild(itemPriority);
             newContainer.appendChild(dropdownStructure);
+            newContainer.appendChild(itemDelete);
             tasklist.appendChild(newContainer);
 
         }

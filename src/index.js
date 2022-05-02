@@ -10,7 +10,15 @@ const MainController = (function () {
     // newItem.complete = true;
     // ObjectController.getProjectByTitle("Default").addItem(newItem);
     // ObjectController.saveToLocalStorage();
+
+    const saveToLocalStorage = () => {
+        ObjectController.saveToLocalStorage();
+    };
+
+    return {saveToLocalStorage};
 })();
+
+export {MainController};
 
 /* 
 
@@ -21,8 +29,11 @@ const MainController = (function () {
 [ ] Date Picker functionality --> ToDoItem.duedate
 [ ] Resize the date picker (look up Materialize docs)
 [ ] Set a placeholder value for the datepicker: "Date due..."
-[ ] Priority Picker functionality --> ToDoItem.priority
-[ ] Connect the Priority Picker to the Colour Mark
+[X] Delete button
+[ ] Delete button functionality
+[ ] Fix Delete button styling (look up Materialize docs)
+[X] Priority Picker functionality --> ToDoItem.priority
+[X] Connect the Priority Picker to the Colour Mark
 [ ] Add a {+} button underneath the list items
 [ ] Navbar functionality
     [ ] Display all projects as buttons
