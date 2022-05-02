@@ -1,7 +1,8 @@
 
 import endOfToday from 'date-fns/endOfToday';
+import format from 'date-fns/format'
 
-const ToDoItem = (title = 'Title...', dueDate = endOfToday(), priority = 'low') => {
+const ToDoItem = (title = 'Title...', dueDate = format(endOfToday(), 'MM/dd/yyyy'), priority = 'low') => {
     let complete = false;
 
     return {title, dueDate, priority, complete};
@@ -26,14 +27,25 @@ const ObjectController = (function () {
     
     const getProjects = () => {return projects;};
 
+    const getProjectByTitle = (title) => {
+        for (let i = 0; i < projects.length; i++) {
+            if (projects[i].getTitle() === title) {
+                return projects[i];
+            }
+        }
+    };
+
     const addProject = (newProject) => {projects.push(newProject);};
 
     const saveToLocalStorage = () => {
-        localStorage.clear();
+        clearLocalStorage();
         for (let i = 0; i < projects.length; i++) {
             localStorage.setItem([projects[i].getTitle()], projects[i].stringify());
-            console.log(projects[i].stringify());
         }
+    };
+
+    const clearLocalStorage = () => {
+        localStorage.clear();
     };
 
     const loadFromLocalStorage = () => {
@@ -59,7 +71,9 @@ const ObjectController = (function () {
 
     const stringify = () => {return JSON.stringify(projects)};
 
-    return {getProjects, saveToLocalStorage, stringify, addProject, loadFromLocalStorage};
+    loadFromLocalStorage();
+
+    return {getProjects, saveToLocalStorage, stringify, addProject, loadFromLocalStorage, getProjectByTitle};
 })();
 
 export {ObjectController, Project, ToDoItem};

@@ -1,4 +1,10 @@
 
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 :root {
     --content-background-color: rgb(221, 221, 221);
     --sidebar-background-color: rgb(204, 204, 204);
@@ -29,6 +35,15 @@ body {
 .content-container {
     background-color: var(--content-background-color);
     flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.content {
+    border: 1px solid red;
+    width: clamp(300px, 80%, 900px);
+    margin-top: 16px;
+    margin-bottom: 16px;
 }
 
 .navbar-container {
@@ -45,6 +60,27 @@ body {
     display: none;
 }
 
+.item-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 48px;
+}
+
+.label-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.colour-mark {
+    width: 6px;
+    height: 100%
+}
+
+.item-duedate .datepicker {
+    width: 100px;
+}
 
 /*************************** TABLET ***************************/
 
