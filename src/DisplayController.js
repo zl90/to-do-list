@@ -48,53 +48,32 @@ const DisplayController = (function () {
         }
     };
 
-    const clickCheckbox = (item, container) => {
-        item.complete = !item.complete;
-        if (item.complete) {
-            // Use this class to style completed items with CSS
-            container.classList.add("item-complete");
-        } else {
-            container.classList.remove("item-complete");
-        }
+    const save = (project) => {
         MainController.saveToLocalStorage();
+        populateProject(project);
+    };
+
+    const clickCheckbox = (item, container, project) => {
+        item.complete = !item.complete;
+        save(project);
     }
 
-    const clickPriority = (item, newPriority, colourMark, button) => {
+    const clickPriority = (item, newPriority, colourMark, button, project) => {
         item.priority = newPriority;
-        switch (newPriority) {
-            case 'low':
-                colourMark.style.backgroundColor = 'yellow';
-                button.textContent = 'LOW';
-                break;
-            case 'medium':
-                colourMark.style.backgroundColor = 'orange';
-                button.textContent = 'MEDIUM';
-                break;
-            case 'high':
-                colourMark.style.backgroundColor = 'red';
-                button.textContent = 'HIGH';
-                break;
-            default:
-                colourMark.style.backgroundColor = 'yellow';
-                button.textContent = 'LOW';
-        }
-        MainController.saveToLocalStorage();
+        save(project);
     };
 
     const clickDelete = (container, project, itemIndex) => {
         container.parentNode.removeChild(container);
         project.removeItem(itemIndex);
-        MainController.saveToLocalStorage();
-        populateProject(project);
+        save(project);
     };
 
     const clickAddTask = (project) => {
         // Temporary function to add a default object
         const newItem = ToDoItem(`TestItem${project.getItems().length + 1}`);
         project.addItem(newItem);
-        MainController.saveToLocalStorage();
-        
-        populateProject(project);
+        save(project);
     };
 
     const populateProject = (project) => {
@@ -106,7 +85,6 @@ const DisplayController = (function () {
         addTaskButton = document.querySelector('.addtask');
         addTaskButton.addEventListener('click', () => {clickAddTask(project);});
         
-
         for (let i = 0; i < project.getItems().length; i++) {
             const newContainer = document.createElement('div');
             newContainer.classList.add('item-container');
@@ -140,7 +118,7 @@ const DisplayController = (function () {
                 itemCheckbox.checked = "checked";
                 newContainer.classList.add("item-complete");
             }
-            itemCheckbox.addEventListener('click', () => {clickCheckbox(project.getItems()[i], newContainer)} );
+            itemCheckbox.addEventListener('click', () => {clickCheckbox(project.getItems()[i], newContainer, project)} );
 
             // Title
             const itemTitle = document.createElement('div');
@@ -152,13 +130,12 @@ const DisplayController = (function () {
             itemDueDate.classList.add('item-duedate');
             itemDueDate.classList.add('datepicker');
             itemDueDate.type = "text";
-            
-
+        
             // Priority dropdown button
             const itemPriority = document.createElement('a');
             itemPriority.classList.add('item-priority');
             itemPriority.classList.add('dropdown-trigger');
-            itemPriority.classList.add('btn');
+            itemPriority.classList.add('btn-small');
             itemPriority.dataset.target = `dropdown${i}`;
             itemPriority.textContent = project.getItems()[i].priority;
             const dropdownStructure = document.createElement('ul');
@@ -168,24 +145,23 @@ const DisplayController = (function () {
             const lowLink = document.createElement('a');
             lowLink.href = "#!";
             lowLink.textContent = "Low";
-            lowLink.addEventListener('click', () => {clickPriority(project.getItems()[i], "low", colourMark, itemPriority);});
+            lowLink.addEventListener('click', () => {clickPriority(project.getItems()[i], "low", colourMark, itemPriority, project);});
             low.appendChild(lowLink);
             dropdownStructure.appendChild(low);
             const medium = document.createElement('li');
             const mediumLink = document.createElement('a');
             mediumLink.href = "#!";
             mediumLink.textContent = "Medium";
-            mediumLink.addEventListener('click', () => {clickPriority(project.getItems()[i], "medium", colourMark, itemPriority);});
+            mediumLink.addEventListener('click', () => {clickPriority(project.getItems()[i], "medium", colourMark, itemPriority, project);});
             medium.appendChild(mediumLink);
             dropdownStructure.appendChild(medium);
             const high = document.createElement('li');
             const highLink = document.createElement('a');
             highLink.href = "#!";
             highLink.textContent = "High";
-            highLink.addEventListener('click', () => {clickPriority(project.getItems()[i], "high", colourMark, itemPriority);});
+            highLink.addEventListener('click', () => {clickPriority(project.getItems()[i], "high", colourMark, itemPriority, project);});
             high.appendChild(highLink);
             dropdownStructure.appendChild(high);
-            
             
             // Delete button
             const itemDelete = document.createElement('a');
@@ -215,8 +191,6 @@ const DisplayController = (function () {
             M.AutoInit();
         }
     };
-
-    
 
     return {toggleSidebar, populateProject};
 })();

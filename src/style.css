@@ -41,7 +41,7 @@ body {
 
 .content {
     /* border: 1px solid red; */
-    width: clamp(300px, 80%, 900px);
+    width: clamp(300px, 90%, 992px);
     margin-top: 16px;
     margin-bottom: 16px;
 }
@@ -72,6 +72,7 @@ body {
     width: 100%;
     height: 48px;
     gap: 16px;
+    background-color: rgb(233, 233, 233);
 }
 
 .label-container {
@@ -90,7 +91,6 @@ body {
 .item-title {
     width: clamp(100px, 100%, 100%);
     height: 100%;
-    border: 1px solid red;
     display: flex;
     align-items: center;
 }
@@ -107,6 +107,11 @@ body {
 
 .item-priority {
     width: 100px;
+}
+
+.addtask-container {
+    display: flex;
+    justify-content: center;
 }
 
 /*************************** TABLET ***************************/

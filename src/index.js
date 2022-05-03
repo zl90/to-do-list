@@ -31,10 +31,13 @@ export {MainController};
 [ ] Set a placeholder value for the datepicker: "Date due..."
 [X] Delete button
 [X] Delete button functionality
-[ ] Fix Delete button styling (look up Materialize docs)
+[X] Fix Delete button styling (look up Materialize docs)
 [X] Priority Picker functionality --> ToDoItem.priority
 [X] Connect the Priority Picker to the Colour Mark
-[ ] Add a {+} button underneath the list items
+[X] Add a {+} button underneath the list items
+[ ] Fix the sizing issues inside the Item Container
+[X] Temporary {+} button
+[ ] {+} Button functionality
 [ ] Navbar functionality
     [ ] Display all projects as buttons
     [ ] Link project buttons to the "populateProject" function
