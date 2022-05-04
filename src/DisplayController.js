@@ -146,11 +146,15 @@ const DisplayController = (function () {
             const itemTitle = document.createElement('div');
             itemTitle.classList.add('input-field');
             itemTitle.classList.add('item-title');
-            // itemTitle.classList.add('truncate');
             const newInputField = document.createElement('input');
             newInputField.classList.add('validate');
             newInputField.classList.add('title-input');
             newInputField.value = project.getItems()[i].title;
+            if (project.getItems()[i].complete) {
+                newInputField.style.textDecoration = "line-through";
+                newInputField.style.color = "gray";
+                newContainer.style.order = project.getItems().length;
+            }
             newInputField.placeholder = "Click to change title...";
             newInputField.addEventListener('change', () => {changeTitle(project, project.getItems()[i], newInputField.value)});
             itemTitle.appendChild(newInputField);
