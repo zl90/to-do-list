@@ -1,5 +1,6 @@
 import { MainController } from ".";
 import { ObjectController, Project, ToDoItem } from './ObjectController';
+import format from 'date-fns/format'
 
 const DisplayController = (function () {
 
@@ -13,16 +14,19 @@ const DisplayController = (function () {
     // Events
     hamburgerMenuButton.addEventListener('click', toggleSidebar);
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Materialize dropdown tool
         let elems = document.querySelectorAll('.dropdown-trigger');
         let options = document.querySelectorAll('.dropdown-trigger');
         let instances = M.Dropdown.init(elems, options);
     });
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Materialize date-picker tool
         var elems = document.querySelectorAll('.datepicker');
         let options = null;
         var instances = M.Datepicker.init(elems, options);
     });
 
+    // Methods
     function toggleSidebar () {
         if (sidebar.style.display !== 'flex') {
             sidebar.style.display = 'flex';
@@ -73,6 +77,12 @@ const DisplayController = (function () {
         // Temporary function to add a default object
         const newItem = ToDoItem(`TestItem${project.getItems().length + 1}`);
         project.addItem(newItem);
+        save(project);
+    };
+
+    const changeDueDate = (project, item, datepicker) => {
+        const date = format(new Date(datepicker.value), 'MM/dd/yyyy');
+        item.dueDate = date;
         save(project);
     };
 
@@ -129,7 +139,10 @@ const DisplayController = (function () {
             const itemDueDate = document.createElement('input');
             itemDueDate.classList.add('item-duedate');
             itemDueDate.classList.add('datepicker');
+            //itemDueDate.placeholder = "Due date...";
+            itemDueDate.value = format(new Date(project.getItems()[i].dueDate), 'MM/dd/yyyy');
             itemDueDate.type = "text";
+            itemDueDate.addEventListener('change', () => {changeDueDate(project, project.getItems()[i], itemDueDate)});
         
             // Priority dropdown button
             const itemPriority = document.createElement('a');
@@ -144,6 +157,7 @@ const DisplayController = (function () {
             const low = document.createElement('li');
             const lowLink = document.createElement('a');
             lowLink.href = "#!";
+            lowLink.style.color = "gray";
             lowLink.textContent = "Low";
             lowLink.addEventListener('click', () => {clickPriority(project.getItems()[i], "low", colourMark, itemPriority, project);});
             low.appendChild(lowLink);
@@ -151,6 +165,7 @@ const DisplayController = (function () {
             const medium = document.createElement('li');
             const mediumLink = document.createElement('a');
             mediumLink.href = "#!";
+            mediumLink.style.color = "gray";
             mediumLink.textContent = "Medium";
             mediumLink.addEventListener('click', () => {clickPriority(project.getItems()[i], "medium", colourMark, itemPriority, project);});
             medium.appendChild(mediumLink);
@@ -158,6 +173,7 @@ const DisplayController = (function () {
             const high = document.createElement('li');
             const highLink = document.createElement('a');
             highLink.href = "#!";
+            highLink.style.color = "gray";
             highLink.textContent = "High";
             highLink.addEventListener('click', () => {clickPriority(project.getItems()[i], "high", colourMark, itemPriority, project);});
             high.appendChild(highLink);
@@ -177,6 +193,7 @@ const DisplayController = (function () {
             deleteIcon.textContent = 'close';
             itemDelete.appendChild(deleteIcon);
 
+            // Append to the DOM
             newContainer.appendChild(colourMark);
             newLabel.appendChild(itemCheckbox);
             newLabel.appendChild(newSpan);
@@ -188,6 +205,7 @@ const DisplayController = (function () {
             newContainer.appendChild(itemDelete);
             tasklist.appendChild(newContainer);
 
+            // Re-initialise Materialize components
             M.AutoInit();
         }
     };

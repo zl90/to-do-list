@@ -26,9 +26,11 @@ export {MainController};
 
 [X] Checkbox functionality --> ToDoItem.complete (fixed by passing ToDoItem ref to the event listener. Easy!)
 [ ] Gray-out ToDoItems when they are complete
-[ ] Date Picker functionality --> ToDoItem.duedate
-[ ] Resize the date picker (look up Materialize docs)
-[ ] Set a placeholder value for the datepicker: "Date due..."
+[X] Date Picker functionality --> ToDoItem.duedate
+[X] Resize the date picker (look up Materialize docs)
+[ ] Resize the buttons
+[X] Set a placeholder value for the datepicker: "Date due..."
+[ ] Add the ability to click the Title and edit it
 [X] Delete button
 [X] Delete button functionality
 [X] Fix Delete button styling (look up Materialize docs)

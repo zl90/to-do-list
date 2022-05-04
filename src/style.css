@@ -79,6 +79,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    
 }
 
 .colour-mark {
@@ -93,9 +94,14 @@ body {
     height: 100%;
     display: flex;
     align-items: center;
+
+    /* Truncate text */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.item-duedate input[type=text]:not(.browser-default){
+input[type=text]:not(.browser-default) {
     width: 100px;
 }
 
@@ -106,12 +112,22 @@ body {
 }
 
 .item-priority {
-    width: 100px;
+    width: 150px;
+    background-color: grey;
+}
+
+.item-priority:hover {
+    width: 150px;
+    background-color: rgb(102, 102, 102);
 }
 
 .addtask-container {
     display: flex;
     justify-content: center;
+}
+
+.dropdown-content {
+    color: gray;
 }
 
 /*************************** TABLET ***************************/
