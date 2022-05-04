@@ -1,6 +1,6 @@
 
 import endOfToday from 'date-fns/endOfToday';
-import format from 'date-fns/format'
+import format from 'date-fns/format';
 
 const ToDoItem = (title = 'Title...', dueDate = format(endOfToday(), 'MM/dd/yyyy'), priority = 'low') => {
     let complete = false;

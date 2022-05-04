@@ -1,6 +1,7 @@
 import { MainController } from ".";
 import { ObjectController, Project, ToDoItem } from './ObjectController';
-import format from 'date-fns/format'
+import endOfToday from 'date-fns/endOfToday';
+import format from 'date-fns/format';
 
 const DisplayController = (function () {
 
@@ -75,14 +76,23 @@ const DisplayController = (function () {
 
     const clickAddTask = (project) => {
         // Temporary function to add a default object
-        const newItem = ToDoItem(`TestItem${project.getItems().length + 1}`);
+        const newItem = ToDoItem(``);
         project.addItem(newItem);
         save(project);
     };
 
     const changeDueDate = (project, item, datepicker) => {
-        const date = format(new Date(datepicker.value), 'MM/dd/yyyy');
-        item.dueDate = date;
+        if (datepicker.value) {
+            item.dueDate = format(new Date(datepicker.value), 'MM/dd/yyyy');
+        } else {
+            item.dueDate = format(endOfToday(), 'MM/dd/yyyy');
+        }
+        
+        save(project);
+    };
+
+    const changeTitle = (project, item, newTitle) => {
+        item.title = newTitle;
         save(project);
     };
 
@@ -123,6 +133,8 @@ const DisplayController = (function () {
             itemCheckbox.type = 'checkbox';
             const newSpan = document.createElement('span');
             const newLabel = document.createElement('label');
+            newLabel.classList.add('valign-wrapper');
+            newLabel.classList.add('center');
             newLabel.classList.add('label-container');
             if (project.getItems()[i].complete) {
                 itemCheckbox.checked = "checked";
@@ -132,13 +144,22 @@ const DisplayController = (function () {
 
             // Title
             const itemTitle = document.createElement('div');
+            itemTitle.classList.add('input-field');
             itemTitle.classList.add('item-title');
-            itemTitle.textContent = project.getItems()[i].title;
+            // itemTitle.classList.add('truncate');
+            const newInputField = document.createElement('input');
+            newInputField.classList.add('validate');
+            newInputField.classList.add('title-input');
+            newInputField.value = project.getItems()[i].title;
+            newInputField.placeholder = "Click to change title...";
+            newInputField.addEventListener('change', () => {changeTitle(project, project.getItems()[i], newInputField.value)});
+            itemTitle.appendChild(newInputField);
 
             // Duedate (date picker)
             const itemDueDate = document.createElement('input');
             itemDueDate.classList.add('item-duedate');
             itemDueDate.classList.add('datepicker');
+            itemDueDate.classList.add('valign-wrapper');
             //itemDueDate.placeholder = "Due date...";
             itemDueDate.value = format(new Date(project.getItems()[i].dueDate), 'MM/dd/yyyy');
             itemDueDate.type = "text";
