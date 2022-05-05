@@ -9,6 +9,7 @@
     --content-background-color: rgb(221, 221, 221);
     --sidebar-background-color: rgb(204, 204, 204);
     --navbar-background-color: rgb(131, 131, 131);
+    --sidebar-background-color-hover: rgb(189, 189, 189);
     --text-color: black;
 }
 
@@ -30,6 +31,10 @@ body {
 .sidebar-container {
     background-color: var(--sidebar-background-color);
     width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
 }
 
 .content-container {
@@ -164,8 +169,6 @@ input[type=text]:not(.browser-default):hover {
     box-shadow: 0px 2px 5px rgba(128, 128, 128, 0.445);
 }
 
-
-
 .dropdown-content {
     border-radius: 3px;
 }
@@ -178,6 +181,61 @@ input[type=text]:not(.browser-default):hover {
 .dropdown-content {
     color: gray;
 }
+
+.sidebar-default-container {
+    width: 90%;
+}
+
+.sidebar-projects-heading {
+    font-size: 2rem;
+}
+
+.project-container {
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    text-transform: uppercase;
+    font-size: 1rem;
+    height: 48px;
+    border-radius: 4px;
+    background-color: rgb(204, 204, 204);
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.project-container:focus {
+    background-color: var(--sidebar-background-color-hover);
+}
+
+.sidebar-projects-container {
+    width: 90%;
+}
+
+.project-title-div {
+    width: 80%;
+}
+
+.project-delete-button {
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+
+    width: 24px;
+    height: 24px;
+}
+
+.project-delete-button:focus {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.spacefiller {
+    width: 24px;
+    height: 24px;
+}
+
+
 
 /*************************** TABLET ***************************/
 

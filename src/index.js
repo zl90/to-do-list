@@ -4,6 +4,7 @@ import { ObjectController, Project, ToDoItem } from './ObjectController';
 
 
 const MainController = (function () {
+    DisplayController.populateSidebar(ObjectController.getProjects());
     DisplayController.populateProject(ObjectController.getProjectByTitle("Default"));
 
     // const newItem = ToDoItem('TestItem');
@@ -15,17 +16,25 @@ const MainController = (function () {
         ObjectController.saveToLocalStorage();
     };
 
-    return {saveToLocalStorage};
+    const addProject = (project) => {
+        ObjectController.addProject(project);
+    };
+
+    const removeProject = (index) => {
+        ObjectController.removeProject(index);
+    };
+
+    return {saveToLocalStorage, addProject, removeProject};
 })();
 
 export {MainController};
 
 /* 
 
-|| `'-,_,.-'`^'-.,_,.-'` TODO LIST `'-,_,.-'`^'-.,_,.-'` ||
+||`'-,_,.-''`^'-.,_,,.-'`|_TODO_LIST_|`'-,_,,.-''`^'-.,_,.-'`||
 
 [X] Checkbox functionality --> ToDoItem.complete (fixed by passing ToDoItem ref to the event listener. Easy!)
-[ ] Gray-out ToDoItems when they are complete
+[X] Gray-out ToDoItems when they are complete
 [X] Date Picker functionality --> ToDoItem.duedate
 [X] Resize the date picker (look up Materialize docs)
 [X] Resize the buttons
@@ -40,8 +49,10 @@ export {MainController};
 [X] Fix the sizing issues inside the Item Container
 [X] Temporary {+} button
 [X] {+} Button functionality
-[ ] Navbar functionality
-    [ ] Display all projects as buttons
-    [ ] Link project buttons to the "populateProject" function
-
+[~] Navbar functionality
+    [X] Display all projects as buttons
+    [X] Link project buttons to the "populateProject" function
+    [ ] Order buttons properly (default at the top)
+    [ ] Make it impossible to delete the default project
+[ ] Implement an "ALL ITEMS" project which clones the current project list but is separate from the rest so it can't be deleted
 */

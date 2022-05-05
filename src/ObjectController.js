@@ -69,11 +69,15 @@ const ObjectController = (function () {
         }
     };
 
+    const removeProject = (index) => {
+        projects.splice(index, 1);
+    };
+
     const stringify = () => {return JSON.stringify(projects)};
 
     loadFromLocalStorage();
 
-    return {getProjects, saveToLocalStorage, stringify, addProject, loadFromLocalStorage, getProjectByTitle};
+    return {getProjects, saveToLocalStorage, stringify, addProject, loadFromLocalStorage, getProjectByTitle, removeProject};
 })();
 
 export {ObjectController, Project, ToDoItem};

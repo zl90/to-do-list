@@ -2,6 +2,8 @@ import { MainController } from ".";
 import { ObjectController, Project, ToDoItem } from './ObjectController';
 import endOfToday from 'date-fns/endOfToday';
 import format from 'date-fns/format';
+import isToday from 'date-fns/isToday';
+import isTomorrow from 'date-fns/isTomorrow';
 
 const DisplayController = (function () {
 
@@ -11,6 +13,9 @@ const DisplayController = (function () {
     const sidebar = document.querySelector('.sidebar-container');
     const hamburgerMenuButton = document.querySelector('.hamburger-menu');
     let addTaskButton = document.querySelector('.addtask');
+    const sidebarDefaultContainer = document.querySelector('.sidebar-default-container');
+    const sidebarProjectsContainer = document.querySelector('.sidebar-projects-container');
+    let addProjectButton = document.querySelector('.addproject');
     
     // Events
     hamburgerMenuButton.addEventListener('click', toggleSidebar);
@@ -53,9 +58,20 @@ const DisplayController = (function () {
         }
     };
 
+    const clearProjectList = () => {
+        while (sidebarProjectsContainer.lastChild) {
+            sidebarProjectsContainer.removeChild(sidebarProjectsContainer.lastChild);
+        }
+    };
+
     const save = (project) => {
         MainController.saveToLocalStorage();
         populateProject(project);
+    };
+
+    const saveSidebar = (projects) => {
+        MainController.saveToLocalStorage();
+        populateSidebar(projects);
     };
 
     const clickCheckbox = (item, container, project) => {
@@ -96,6 +112,61 @@ const DisplayController = (function () {
         save(project);
     };
 
+    const deleteProject = (projects, i) => {
+        MainController.removeProject(i);
+        saveSidebar(projects);
+    };
+
+    const clickAddProject = (projects) => {
+        const newProject = Project('New project');
+        MainController.addProject(newProject);
+        saveSidebar(projects);
+    };
+
+    const populateSidebar = (projects) => {
+        clearProjectList();
+        clearEventListeners(addProjectButton, false);
+        addProjectButton = document.querySelector('.addproject');
+        addProjectButton.addEventListener('click', () => {clickAddProject(projects);});
+
+        for (let i = 0; i < projects.length; i++) {
+            const newContainer = document.createElement('button');
+            newContainer.classList.add('project-container');
+
+            // Icon
+            const newIcon = document.createElement('i');
+            newIcon.classList.add('material-icons');
+            newIcon.classList.add('center');
+            newIcon.textContent = "format_list_bulleted";
+
+            // Title
+            const newTitle = document.createElement('div');
+            newTitle.classList.add('project-title-div');
+            newTitle.classList.add('truncate');
+            newTitle.textContent = projects[i].getTitle();
+
+            // Delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('project-delete-button');
+            const deleteIcon = document.createElement('i');
+            // deleteIcon.classList.add('tiny');
+            deleteIcon.classList.add('material-icons');
+            deleteIcon.classList.add('center');
+            deleteIcon.textContent = "clear";
+            deleteButton.appendChild(deleteIcon);
+            deleteButton.addEventListener('click', () => {deleteProject(projects, i)});
+
+            // Append item to the sidebar
+            newContainer.appendChild(newIcon);
+            newContainer.appendChild(newTitle);
+            newContainer.appendChild(deleteButton);
+            sidebarProjectsContainer.appendChild(newContainer);
+
+            // Event listener to populate the project
+            newContainer.addEventListener('click', () => {populateProject(projects[i])});
+        }
+    };
+
     const populateProject = (project) => {
         
         clearTaskList();
@@ -112,18 +183,25 @@ const DisplayController = (function () {
             // Colour mark
             const colourMark = document.createElement('div');
             colourMark.classList.add('colour-mark');
-            switch (project.getItems()[i].priority) {
-                case 'low':
-                    colourMark.style.backgroundColor = 'yellow';
-                    break;
-                case 'medium':
-                    colourMark.style.backgroundColor = 'orange';
-                    break;
-                case 'high':
-                    colourMark.style.backgroundColor = 'red';
-                    break;
-                default:
-                    colourMark.style.backgroundColor = 'yellow';
+            if (!project.getItems()[i].complete) {
+                switch (project.getItems()[i].priority) {
+                    case 'low':
+                        colourMark.style.backgroundColor = 'yellow';
+                        newContainer.style.order = 2;
+                        break;
+                    case 'medium':
+                        colourMark.style.backgroundColor = 'orange';
+                        newContainer.style.order = 1;
+                        break;
+                    case 'high':
+                        colourMark.style.backgroundColor = 'red';
+                        newContainer.style.order = 0;
+                        break;
+                    default:
+                        colourMark.style.backgroundColor = 'yellow';
+                }
+            } else {
+                colourMark.style.backgroundColor = "rgb(180, 180, 180)";
             }
 
             // Checkbox
@@ -150,11 +228,7 @@ const DisplayController = (function () {
             newInputField.classList.add('validate');
             newInputField.classList.add('title-input');
             newInputField.value = project.getItems()[i].title;
-            if (project.getItems()[i].complete) {
-                newInputField.style.textDecoration = "line-through";
-                newInputField.style.color = "gray";
-                newContainer.style.order = project.getItems().length;
-            }
+            
             newInputField.placeholder = "Click to change title...";
             newInputField.addEventListener('change', () => {changeTitle(project, project.getItems()[i], newInputField.value)});
             itemTitle.appendChild(newInputField);
@@ -164,9 +238,14 @@ const DisplayController = (function () {
             itemDueDate.classList.add('item-duedate');
             itemDueDate.classList.add('datepicker');
             itemDueDate.classList.add('valign-wrapper');
-            //itemDueDate.placeholder = "Due date...";
             itemDueDate.value = format(new Date(project.getItems()[i].dueDate), 'MM/dd/yyyy');
+            if (isToday(new Date(itemDueDate.value))) {
+                itemDueDate.value = "Today";
+            } else if (isTomorrow(new Date(itemDueDate.value))) {
+                itemDueDate.value = "Tomorrow";
+            }
             itemDueDate.type = "text";
+            
             itemDueDate.addEventListener('change', () => {changeDueDate(project, project.getItems()[i], itemDueDate)});
         
             // Priority dropdown button
@@ -174,6 +253,7 @@ const DisplayController = (function () {
             itemPriority.classList.add('item-priority');
             itemPriority.classList.add('dropdown-trigger');
             itemPriority.classList.add('btn-small');
+            
             itemPriority.dataset.target = `dropdown${i}`;
             itemPriority.textContent = project.getItems()[i].priority;
             const dropdownStructure = document.createElement('ul');
@@ -218,6 +298,20 @@ const DisplayController = (function () {
             deleteIcon.textContent = 'close';
             itemDelete.appendChild(deleteIcon);
 
+            // Gray out items if they are complete
+            if (project.getItems()[i].complete) {
+                const colourWhenComplete = "gray";
+                const textDecorationWhenComplete = "line-through";
+                itemPriority.style.textDecoration = textDecorationWhenComplete;
+                itemPriority.style.color = colourWhenComplete;
+                itemDueDate.style.textDecoration = textDecorationWhenComplete;
+                itemDueDate.style.color = colourWhenComplete;
+                newInputField.style.textDecoration = textDecorationWhenComplete;
+                newInputField.style.color = colourWhenComplete;
+                // Put completed items at the bottom of the list
+                newContainer.style.order = project.getItems().length;
+            }
+
             // Append to the DOM
             newContainer.appendChild(colourMark);
             newLabel.appendChild(itemCheckbox);
@@ -235,7 +329,7 @@ const DisplayController = (function () {
         }
     };
 
-    return {toggleSidebar, populateProject};
+    return {toggleSidebar, populateProject, populateSidebar};
 })();
 
 export {DisplayController};
