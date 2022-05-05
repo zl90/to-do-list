@@ -8,7 +8,7 @@ import isTomorrow from 'date-fns/isTomorrow';
 const DisplayController = (function () {
 
     // DOM nodes
-    const contentHeading = document.querySelector('.content-heading');
+    let contentHeading = document.querySelector('.content-heading');
     const tasklist = document.querySelector('.tasklist');
     const sidebar = document.querySelector('.sidebar-container');
     const hamburgerMenuButton = document.querySelector('.hamburger-menu');
@@ -71,7 +71,7 @@ const DisplayController = (function () {
 
     const saveSidebar = (projects) => {
         MainController.saveToLocalStorage();
-        populateSidebar(projects);
+        MainController.populateSidebar();
     };
 
     const clickCheckbox = (item, container, project) => {
@@ -117,10 +117,33 @@ const DisplayController = (function () {
         saveSidebar(projects);
     };
 
+    const namingCollisionFound = (projects, name) => {
+        let matchFound = false;
+        for (let i = 0; i < projects.length; i++) {
+            if (projects[i].getTitle() === name) {
+                matchFound = true;
+            }
+        }
+
+        return matchFound;
+    };
+
     const clickAddProject = (projects) => {
-        const newProject = Project('New project');
+        let newTitle = 'New project';
+        let iterator = 0;
+        while (namingCollisionFound(projects, newTitle)) {
+            newTitle = `New project${iterator}`;
+            iterator++;
+        }
+        const newProject = Project(newTitle);
         MainController.addProject(newProject);
         saveSidebar(projects);
+    };
+
+    const changeProjectTitle = (project, inputField) => {
+        project.setTitle(inputField.value);
+        save(project);
+        saveSidebar();
     };
 
     const populateSidebar = (projects) => {
@@ -145,11 +168,12 @@ const DisplayController = (function () {
             newTitle.classList.add('truncate');
             newTitle.textContent = projects[i].getTitle();
 
+            
+
             // Delete button
             const deleteButton = document.createElement('button');
             deleteButton.classList.add('project-delete-button');
             const deleteIcon = document.createElement('i');
-            // deleteIcon.classList.add('tiny');
             deleteIcon.classList.add('material-icons');
             deleteIcon.classList.add('center');
             deleteIcon.textContent = "clear";
@@ -162,6 +186,13 @@ const DisplayController = (function () {
             newContainer.appendChild(deleteButton);
             sidebarProjectsContainer.appendChild(newContainer);
 
+            // Make sure the Default project is on the top
+            if (projects[i].getTitle() === "Default") {
+                newContainer.style.order = 0;
+            } else {
+                newContainer.style.order = 1;
+            }
+
             // Event listener to populate the project
             newContainer.addEventListener('click', () => {populateProject(projects[i])});
         }
@@ -170,9 +201,12 @@ const DisplayController = (function () {
     const populateProject = (project) => {
         
         clearTaskList();
-        contentHeading.textContent = project.getTitle();
+        contentHeading.value = project.getTitle();
         clearEventListeners(addTaskButton, false);
+        clearEventListeners(contentHeading, false);
         
+        contentHeading = document.querySelector('.content-heading');
+        contentHeading.addEventListener('change', () => {changeProjectTitle(project, contentHeading);});
         addTaskButton = document.querySelector('.addtask');
         addTaskButton.addEventListener('click', () => {clickAddTask(project);});
         

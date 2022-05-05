@@ -4,13 +4,10 @@ import { ObjectController, Project, ToDoItem } from './ObjectController';
 
 
 const MainController = (function () {
-    DisplayController.populateSidebar(ObjectController.getProjects());
-    DisplayController.populateProject(ObjectController.getProjectByTitle("Default"));
 
-    // const newItem = ToDoItem('TestItem');
-    // newItem.complete = true;
-    // ObjectController.getProjectByTitle("Default").addItem(newItem);
-    // ObjectController.saveToLocalStorage();
+    const populateSidebar = () => {
+        DisplayController.populateSidebar(ObjectController.getProjects());
+    };
 
     const saveToLocalStorage = () => {
         ObjectController.saveToLocalStorage();
@@ -24,7 +21,10 @@ const MainController = (function () {
         ObjectController.removeProject(index);
     };
 
-    return {saveToLocalStorage, addProject, removeProject};
+    populateSidebar();
+    DisplayController.populateProject(ObjectController.getProjectByTitle("Default"));
+
+    return {saveToLocalStorage, addProject, removeProject, populateSidebar};
 })();
 
 export {MainController};
@@ -52,7 +52,9 @@ export {MainController};
 [~] Navbar functionality
     [X] Display all projects as buttons
     [X] Link project buttons to the "populateProject" function
-    [ ] Order buttons properly (default at the top)
-    [ ] Make it impossible to delete the default project
-[ ] Implement an "ALL ITEMS" project which clones the current project list but is separate from the rest so it can't be deleted
+    [X] Order buttons properly (default at the top)
+    [X] Make it possible to rename projects
+[ ] Add the logo
+[ ] Add a favicon
+
 */

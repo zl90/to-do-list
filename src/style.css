@@ -1,8 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;1,100;1,200;1,300;1,400;1,500&display=swap');
 
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: var(--font-family);
+    font-weight: 500;
 }
 
 :root {
@@ -11,6 +14,7 @@
     --navbar-background-color: rgb(131, 131, 131);
     --sidebar-background-color-hover: rgb(189, 189, 189);
     --text-color: black;
+    --font-family: 'Raleway', sans-serif;
 }
 
 html {
@@ -35,6 +39,7 @@ body {
     flex-direction: column;
     align-items: center;
     padding-top: 10px;
+    gap: 16px;
 }
 
 .content-container {
@@ -54,7 +59,7 @@ body {
     gap: 16px;
 }
 
-.content-heading {
+.content-heading-container input:not([type]){
     font-size: 2rem;
 }
 
@@ -66,6 +71,17 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 16px;
+}
+
+.navbar-left {
+    font-size: 2.2rem;
+    margin-left: 16px;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
 }
 
 .hamburger-menu {
@@ -118,6 +134,8 @@ input:not([type]) {
     border-bottom: none;
     margin-bottom: 0;
     font-size: 1rem;
+    font-family: var(--font-family);
+    font-weight: 500;
 }
 
 input:not([type])::placeholder {
@@ -129,8 +147,10 @@ input[type=text]:not(.browser-default) {
     border-bottom: none;
     width: 80px;
     margin-bottom: 0;
-    font-size: 1rem;
+    font-size: 0.92rem;
     text-align: center;
+    font-family: var(--font-family);
+    font-weight: 500;
 }
 
 input[type=text]:not(.browser-default):hover {
@@ -183,11 +203,16 @@ input[type=text]:not(.browser-default):hover {
 }
 
 .sidebar-default-container {
-    width: 90%;
+    width: 85%;
 }
 
 .sidebar-projects-heading {
     font-size: 2rem;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    width: 85%;
+    margin-top: 26px;
 }
 
 .project-container {
@@ -203,18 +228,29 @@ input[type=text]:not(.browser-default):hover {
     display: flex;
     justify-content: space-around;
     align-items: center;
+
+    gap: 10px;
 }
 
 .project-container:focus {
     background-color: var(--sidebar-background-color-hover);
 }
 
+
+
 .sidebar-projects-container {
-    width: 90%;
+    width: 85%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
 }
 
 .project-title-div {
     width: 80%;
+    text-align: left;
+    position: relative;
+    top: 2px;
 }
 
 .project-delete-button {
@@ -235,7 +271,9 @@ input[type=text]:not(.browser-default):hover {
     height: 24px;
 }
 
-
+.addproject-container {
+    margin-bottom: 16px;
+}
 
 /*************************** TABLET ***************************/
 
@@ -262,6 +300,7 @@ input[type=text]:not(.browser-default):hover {
         display: none;
         flex: 1;        
         width: 100%;
+        padding-bottom: 16px;
     }
 
     .content-container {
