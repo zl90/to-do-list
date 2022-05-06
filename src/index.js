@@ -1,39 +1,56 @@
-import './style.css';
-import { DisplayController } from './DisplayController';
-import { ObjectController, Project, ToDoItem } from './ObjectController';
+/* eslint-disable import/no-cycle */
+import "./style.css";
+import DisplayController from "./DisplayController";
+import { ObjectController, Project } from "./ObjectController";
 
+const MainController = (() => {
+  const populateSidebar = () => {
+    DisplayController.populateSidebar(ObjectController.getProjects());
+  };
 
-const MainController = (function () {
+  const saveToLocalStorage = () => {
+    ObjectController.saveToLocalStorage();
+  };
 
-    const populateSidebar = () => {
-        DisplayController.populateSidebar(ObjectController.getProjects());
-    };
+  const addProject = (project) => {
+    ObjectController.addProject(project);
+  };
 
-    const saveToLocalStorage = () => {
-        ObjectController.saveToLocalStorage();
-    };
+  const removeProject = (index) => {
+    ObjectController.removeProject(index);
+  };
 
-    const addProject = (project) => {
-        ObjectController.addProject(project);
-    };
+  const addDefaultProject = () => {
+    const defaultProject = Project("Default");
+    addProject(defaultProject);
+    DisplayController.populateProject(defaultProject);
+  };
 
-    const removeProject = (index) => {
-        ObjectController.removeProject(index);
-    };
+  if (ObjectController.getProjectByTitle("Default")) {
+    DisplayController.populateProject(
+      ObjectController.getProjectByTitle("Default")
+    );
+  } else {
+    addDefaultProject();
+  }
+  populateSidebar();
 
-    populateSidebar();
-    DisplayController.populateProject(ObjectController.getProjectByTitle("Default"));
-
-    return {saveToLocalStorage, addProject, removeProject, populateSidebar};
+  return {
+    saveToLocalStorage,
+    addProject,
+    removeProject,
+    populateSidebar,
+    addDefaultProject,
+  };
 })();
 
-export {MainController};
+export default MainController;
 
-/* 
+/*
 
 ||`'-,_,.-''`^'-.,_,,.-'`|_TODO_LIST_|`'-,_,,.-''`^'-.,_,.-'`||
 
-[X] Checkbox functionality --> ToDoItem.complete (fixed by passing ToDoItem ref to the event listener. Easy!)
+[X] Checkbox functionality --> ToDoItem.complete
 [X] Gray-out ToDoItems when they are complete
 [X] Date Picker functionality --> ToDoItem.duedate
 [X] Resize the date picker (look up Materialize docs)
@@ -54,7 +71,7 @@ export {MainController};
     [X] Link project buttons to the "populateProject" function
     [X] Order buttons properly (default at the top)
     [X] Make it possible to rename projects
-[ ] Add the logo
+[X] Add the logo
 [ ] Add a favicon
 
 */

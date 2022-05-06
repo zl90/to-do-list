@@ -1,14 +1,16 @@
 # / / T O D O O O ! :
+
 ### To-Do List: track your tasks!
 
 ### Live Demo:
+
 https://zl90.github.io/to-do-list
 
-### Desktop view: 
+### Desktop view:
 
 ![Desktop Screenshot](https://zl90.github.io/to-do-list/desktop-view.png)
 
-### Mobile View:  
+### Mobile View:
 
 ![Mobile Screenshot](https://zl90.github.io/to-do-list/mobile-view.png)
 
@@ -36,4 +38,4 @@ This project was created for the [To-Do List assignment](https://www.theodinproj
 
 ### Scope Creep
 
-* Added mobile responsiveness.
+- Added mobile responsiveness.
